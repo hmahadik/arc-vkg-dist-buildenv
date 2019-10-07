@@ -40,6 +40,7 @@ CMD echo "Building the toolchain" \
     && wget $dist_url \
     && tar xvf *.tar.bz2 \
     && export dist_dir=`ls -1 | grep -v \.tar\.bz2` \
+    && export dist_dir=`realpath $dist_dir` \
     && cd $dist_dir \
     && cd Toolchains/src \
     && tar zxf buildroot-*-viking.tar.gz \
