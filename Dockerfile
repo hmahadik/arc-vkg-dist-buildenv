@@ -29,15 +29,26 @@ RUN apt-get update && apt-get install -y -q \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN rm /bin/sh && ln -s bash /bin/sh
+
 # URL pointing to Arcturus-Viking-dist-P242.316.1940.tar.bz2
 ARG dist_url
 ENV dist_url=$dist_url
 
-# build the toolchain
-CMD echo "Building the toolchain" \
-    && mkdir -p /build \
-    && cd /build \
-    && wget $dist_url \
+ENV USER_NAME build
+ARG host_uid=1001
+ARG host_gid=1001
+RUN groupadd -g $host_gid $USER_NAME && \
+    useradd -g $host_gid -m -s /bin/bash -u $host_uid $USER_NAME
+
+ENV BUILD_INPUT_DIR /home/$USER_NAME/input
+ENV BUILD_OUTPUT_DIR /home/$USER_NAME/output
+RUN echo "Creating INPUT and OUTPUT directories" \
+    && mkdir -p $BUILD_INPUT_DIR $BUILD_OUTPUT_DIR
+
+WORKDIR $BUILD_INPUT_DIR
+
+CMD wget $dist_url \
     && tar xvf *.tar.bz2 \
     && export dist_dir=`ls -1 | grep -v \.tar\.bz2` \
     && export dist_dir=`realpath $dist_dir` \
@@ -51,6 +62,6 @@ CMD echo "Building the toolchain" \
     && cd $dist_dir \
     && cd dist \
     && make \
-    && pwd \
-    && ls -lh \
+    && cp -v *.bin $BUILD_OUTPUT_DIR \
     && echo "Done."
+    
