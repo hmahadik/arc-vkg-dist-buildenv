@@ -1,10 +1,7 @@
-### Building docker image
-```bash
-# note: you'll need to set the dist_url arg below
-docker build --build-arg dist_url="http://" -t vikmx-buildenv .
-```
-
 ### Running docker image
 ```bash
-docker run -it vikmx-buildenv bash
+docker pull hmahadik/arc-vkg-dist-buildenv
+
+# note: set the dist_url correctly
+docker run -it --env dist_url=http://../Arcturus-Viking-dist-P242.316.1940.tar.bz2 hmahadik/arc-vkg-dist-buildenv
 ```
