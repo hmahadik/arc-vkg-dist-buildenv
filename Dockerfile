@@ -48,8 +48,6 @@ RUN echo "Creating INPUT and OUTPUT directories" \
 
 WORKDIR $BUILD_INPUT_DIR
 
-USER $USER_NAME
-
 CMD wget --quiet --no-clobber $dist_url \
     && tar xvf *.tar.bz2 \
     && export dist=`ls -1 | grep -v \.tar\.bz2` \
