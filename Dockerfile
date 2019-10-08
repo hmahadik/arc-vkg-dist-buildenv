@@ -48,10 +48,12 @@ RUN echo "Creating INPUT and OUTPUT directories" \
 
 WORKDIR $BUILD_INPUT_DIR
 
-CMD wget $dist_url \
+USER $USER_NAME
+
+CMD wget --quiet --no-clobber $dist_url \
     && tar xvf *.tar.bz2 \
-    && export dist_dir=`ls -1 | grep -v \.tar\.bz2` \
-    && export dist_dir=`realpath $dist_dir` \
+    && export dist=`ls -1 | grep -v \.tar\.bz2` \
+    && export dist_dir=`realpath $dist` \
     && cd $dist_dir \
     && cd Toolchains/src \
     && tar zxf buildroot-*-viking.tar.gz \
@@ -62,6 +64,6 @@ CMD wget $dist_url \
     && cd $dist_dir \
     && cd dist \
     && make \
-    && cp -v *.bin $BUILD_OUTPUT_DIR \
+    && mkdir -p $BUILD_OUTPUT_DIR/$dist \
+    && cp -v *.bin $BUILD_OUTPUT_DIR/$dist \
     && echo "Done."
-    
