@@ -35,6 +35,10 @@ RUN rm /bin/sh && ln -s bash /bin/sh
 ARG dist_url
 ENV dist_url=$dist_url
 
+# Parsed name from URL
+ARG name
+ENV name=$name
+
 ENV USER_NAME build
 ARG host_uid=1001
 ARG host_gid=1001
@@ -49,7 +53,7 @@ RUN echo "Creating INPUT and OUTPUT directories" \
 WORKDIR $BUILD_INPUT_DIR
 
 CMD wget --quiet --no-clobber $dist_url \
-    && tar xvf *.tar.bz2 \
+    && tar xvf $name.tar.bz2 \
     && export dist=`ls -1 | grep -v \.tar\.bz2` \
     && export dist_dir=`realpath $dist` \
     && cd $dist_dir \
